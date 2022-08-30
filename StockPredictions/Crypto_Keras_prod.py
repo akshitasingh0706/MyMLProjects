@@ -121,31 +121,16 @@ class stockPred:
 
         model = self.LSTM_model(x_train, output_size=1, neurons= self.neurons, dropout= self.dropout, loss= self.loss,
         optimizer= self.optimizer)
-        modelfit = model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size, verbose=1, shuffle=True)
+        modelfit = model.fit(x_train, y_train, epochs= self.epochs, batch_size= self.batch_size, verbose=1, shuffle=True)
         return model, modelfit
 
     def predictModel(self):
         x = self.getTrainData()[0]
         x_pred = x[-1]
 
-        from sklearn.metrics import mean_absolute_error
         model = self.trainModel()[0]
-        x_test, y_test = self.getTestData()
+        pred = model.predict(x_pred).squeeze()
 
-        preds = model.predict(x_test).squeeze()
-        mean_absolute_error(preds, self.y_test)
-
-        from sklearn.metrics import mean_squared_error
-        mse = mean_squared_error(preds, y_test)
-
-        from sklearn.metrics import r2_score
-        r2 = r2_score(y_test, preds)
-
-        from sklearn.preprocessing import MinMaxScaler
-        scaler = MinMaxScaler(feature_range=(-1,1))
-        y_test_true = scaler.inverse_transform(y_test)
-        preds_true = scaler.inverse_transform(np.reshape(preds, (preds.shape[0], 1)))
-        self.line_plot(y_test_true, preds_true, 'actual', 'prediction')
-        return mse, r2
+        return pred
     
     
