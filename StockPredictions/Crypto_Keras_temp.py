@@ -124,6 +124,6 @@ class stockPred:
         scaler = self.scaleData()[1]
         pred_true = scaler.inverse_transform(pred)
         return pred_true
-
+    
     
     
