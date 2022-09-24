@@ -1,0 +1,57 @@
+import tensorflow as tf
+
+def make_eegnet_model(input_shape):
+    
+    # Defining each layer of eegnet
+    channels = input_shape[-1]
+    conv_1 = tf.keras.layers.Conv2D(25, (1, 5), activation='linear', padding = 'valid', input_shape = input_shape[1:], kernel_constraint=max_norm(2))
+    conv_2 = tf.keras.layers.Conv2D(25, (1, channels), activation = 'linear', padding = 'valid', kernel_constraint=max_norm(2))
+    bn_1 = tf.keras.layers.BatchNormalization(epsilon=1e-5, momentum=0.1)
+    elu_1 = tf.keras.layers.ELU()
+    mp_1 = tf.keras.layers.MaxPool2D((1, 2))
+    drop_1 = tf.keras.layers.Dropout(0.5)
+    conv_3 = tf.keras.layers.Conv2D(50, (1, 5), activation='linear', padding='valid', kernel_constraint=max_norm(2))
+    bn_2 = tf.keras.layers.BatchNormalization(epsilon=1e-5, momentum=0.1)
+    elu_2 = tf.keras.layers.ELU()
+    mp_2 = tf.keras.layers.MaxPool2D((1, 2))
+    drop_2 = tf.keras.layers.Dropout(0.5)
+    conv_4 = tf.keras.layers.Conv2D(100, (1, 5), activation='linear', padding='valid', kernel_constraint=max_norm(2))
+    bn_3 = tf.keras.layers.BatchNormalization(epsilon=1e-5, momentum=0.1)
+    elu_3 = tf.keras.layers.ELU()
+    mp_3 = tf.keras.layers.MaxPool2D((1, 2))
+    drop_3 = tf.keras.layers.Dropout(0.5)
+    conv_5 = tf.keras.layers.Conv2D(200, (1, 5), activation='linear', padding='valid', kernel_constraint=max_norm(2))
+    bn_4 = tf.keras.layers.BatchNormalization(epsilon=1e-5, momentum=0.1)
+    elu_4 = tf.keras.layers.ELU()
+    mp_4 = tf.keras.layers.MaxPool2D((1, 2))
+    drop_4 = tf.keras.layers.Dropout(0.5)
+    fl_1 = tf.keras.layers.Flatten()
+    dense_1 = tf.keras.layers.Dense(1, activation='sigmoid', kernel_constraint=max_norm(0.5))
+    
+    # Develop model
+    model = tf.keras.Sequential()
+    model.add(conv_1)
+    model.add(conv_2)
+    model.add( bn_1)
+    model.add(elu_1)
+    model.add(mp_1)
+    model.add(drop_1)
+    model.add(conv_3)
+    model.add(bn_2)
+    model.add(elu_2)
+    model.add(mp_2)
+    model.add(drop_2)
+    model.add(conv_4)
+    model.add(bn_3)
+    model.add(elu_3)
+    model.add(mp_3)
+    model.add(drop_3)
+    model.add(conv_5)
+    model.add(bn_4)
+    model.add(elu_4)
+    model.add(mp_4)
+    model.add(drop_4)
+    model.add(fl_1)
+    model.add(dense_1)
+    
+    return model
